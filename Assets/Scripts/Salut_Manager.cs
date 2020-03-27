@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine.Advertisements;
+using UnityEngine.Monetization;
 
 public class Salut_Manager : MonoBehaviour
 {
@@ -11,6 +13,35 @@ public class Salut_Manager : MonoBehaviour
     public Text WinText;
     public Text WinTextDetails;
     public Text ShareText;
+
+#if UNITY_IOS
+    private string gameId = "3521728";
+#elif UNITY_ANDROID
+    private string gameId = "3521729";
+#endif
+    public string placementId = "video";
+    bool testMode = false;
+
+    public void ShowAd()
+    {
+        StartCoroutine(ShowAdWhenReady());
+    }
+
+    private IEnumerator ShowAdWhenReady()
+    {
+        while (!Monetization.IsReady(placementId))
+        {
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        ShowAdPlacementContent ad = null;
+        ad = Monetization.GetPlacementContent(placementId) as ShowAdPlacementContent;
+
+        if (ad != null)
+        {
+            ad.Show();
+        }
+    }
 
     public void ButtonShare_Click()
     {
@@ -22,6 +53,7 @@ public class Salut_Manager : MonoBehaviour
 
     public void ButtonReturn_Click()
     {
+        ShowAd();        
         SceneManager.LoadScene("Menu");
     }
 
@@ -46,6 +78,8 @@ public class Salut_Manager : MonoBehaviour
     {
         string[] RangEng = { "GURU", "Teacher", "Master", "Expert", "Competent", "Novice", "Baby"};
         string[] RangRus = { "ГУРУ", "Учитель", "Мастер", "Эксперт", "Компетентный", "Новичок", "Двоечник"};
+
+        Monetization.Initialize(gameId, testMode);
         
         float t = Mathf.Round((Time.time - GameMode1_Manager.TimeStart) * 100f) / 100f;
         string minutes = ((int)t / 60).ToString();
