@@ -24,6 +24,8 @@ public class Settings_Manager : MonoBehaviour {
     public Text RussianText;
     public Text ReturnText;
 
+    private bool ToggleProtect = true;
+
     void Start()
     {
         //if (GameMode == 0) GameMode = 4;
@@ -52,7 +54,9 @@ public class Settings_Manager : MonoBehaviour {
             ReturnText.text = "Return";
         }
 
-        switch (GameMode)
+        //Debug.Log("GameMode = " + GameMode.ToString());
+        ToggleProtect = true;
+        switch (GameMode) //PlayerPrefs.GetInt("GameMode"))
         {
             case 1:
                 ToggleNormal.isOn = true;
@@ -63,8 +67,11 @@ public class Settings_Manager : MonoBehaviour {
             case 3:
                 ToggleAccelerometer.isOn = true;
                 break;
-            default:
+            case 4:
                 ToggleVoice.isOn = true;
+                break;
+            default:
+                ToggleNormal.isOn = true;
                 break;
         }
 
@@ -77,42 +84,69 @@ public class Settings_Manager : MonoBehaviour {
                 ToggleEnglish.isOn = true;
                 break;
         }
+        ToggleProtect = false;
 
     }
 
     public void ButtonReturn_Click()
     {
+        ToggleProtect = true;
         SceneManager.LoadScene("Menu");
     }
 
     public void ToggleNormal_Click()
     {
-        GameMode = 1;
+        if (!ToggleProtect)
+        if (ToggleNormal.isOn) {
+            GameMode = 1;
+            //PlayerPrefs.SetInt("GameMode", 1);
+            Debug.Log("GameMode := 1");
+        }
     }
 
     public void ToggleInverse_Click()
     {
-        GameMode = 2;
+        if (!ToggleProtect)
+        if (ToggleInverse.isOn)
+        {
+            GameMode = 2;
+            //PlayerPrefs.SetInt("GameMode", 2);
+            Debug.Log("GameMode := 2");
+        }
     }
 
     public void ToggleGyroscope_Click()
     {
-        GameMode = 3;
+        if (!ToggleProtect)
+        if (ToggleAccelerometer.isOn)
+        {
+            GameMode = 3;
+            //PlayerPrefs.SetInt("GameMode", 3);
+            Debug.Log("GameMode := 3");
+        }
     }
 
     public void ToggleVoiceControl_Click()
     {
-        GameMode = 4;
+        if (!ToggleProtect)
+        if (ToggleVoice.isOn)
+        {
+            GameMode = 4;
+            //PlayerPrefs.SetInt("GameMode", 4);
+            Debug.Log("GameMode := 4");
+        }
     }
 
     public void ToggleEnglish_Click()
     {
-        Language = SystemLanguage.English;
+        if (!ToggleProtect)
+            Language = SystemLanguage.English;
     }
 
     public void ToggleRussian_Click()
     {
-        Language = SystemLanguage.Russian;
+        if (!ToggleProtect)
+            Language = SystemLanguage.Russian;
     }
 
 }
